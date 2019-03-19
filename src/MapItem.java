@@ -1,12 +1,19 @@
-public class MapItem<Type> {
+public class MapItem<T> {
     private String key;
-    private Type value;
+    private T value;
+
+    MapItem() {}
+
+    MapItem(String key, T value) {
+        this.setKey(key);
+        this.setValue(value);
+    }
 
     public String getKey() {
         return key;
     }
 
-    public Type getValue() {
+    public T getValue() {
         return value;
     }
 
@@ -14,7 +21,7 @@ public class MapItem<Type> {
         this.key = key;
     }
 
-    public void setValue(Type value) {
+    public void setValue(T value) {
         this.value = value;
     }
 }
