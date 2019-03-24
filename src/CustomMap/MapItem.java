@@ -1,29 +1,29 @@
 package CustomMap;
 
-class MapItem<T> {
+class MapItem<V> {
     private String key;
-    private T value;
+    private V value;
 
     MapItem() {}
 
-    protected MapItem(String key, T value) {
+    MapItem(String key, V value) {
         this.setKey(key);
         this.setValue(value);
     }
 
-    public String getKey() {
+    String getKey() {
         return key;
     }
 
-    public T getValue() {
+    V getValue() {
         return value;
     }
 
-    public void setKey(String key) {
+    void setKey(String key) {
         this.key = key;
     }
 
-    public void setValue(T value) {
+    void setValue(V value) {
         this.value = value;
     }
 }

@@ -1,5 +1,5 @@
 package CustomMap;
 
 public interface HashEngine {
-    long generateHash(String key);
+    Number generateHash(String key);
 }

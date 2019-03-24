@@ -2,10 +2,10 @@ package CustomMap;
 
 import java.util.LinkedList;
 
-public class CustomMap<T> {
+public class CustomMap<V> {
     private LinkedList<MapItem>[] lists;
     private int size;
-    private int listsLenght;
+    private int listsLength;
     private HashEngine hashEngine;
 
     public CustomMap() {
@@ -17,7 +17,7 @@ public class CustomMap<T> {
     }
 
     public CustomMap(int length, HashEngine hashEngine) {
-        this.listsLenght = length;
+        this.listsLength = length;
         this.hashEngine = hashEngine;
         this.initLists();
         this.size = 0;
@@ -27,8 +27,8 @@ public class CustomMap<T> {
      * Inicializa o TAD do dicionário.
      */
     private void initLists() {
-        this.lists = new LinkedList[this.listsLenght];
-        for (int i = 0; i < this.listsLenght; i++) this.lists[i] = new LinkedList<MapItem>();
+        this.lists = new LinkedList[this.listsLength];
+        for (int i = 0; i < this.listsLength; i++) this.lists[i] = new LinkedList<MapItem>();
     }
 
     /**
@@ -37,9 +37,8 @@ public class CustomMap<T> {
      * @return número que representa qual a LinkedList daquele valor.
      */
     private int getIndex(String key) {
-        long hash = this.hashEngine.generateHash(key);
-        int index = (int)(hash % this.lists.length);
-        return index;
+        Number hash = this.hashEngine.generateHash(key);
+        return hash.intValue() % this.lists.length;
     }
 
     /**
@@ -47,7 +46,7 @@ public class CustomMap<T> {
      * @param key Chave referência.
      * @return Objeto que contém a key, caso encontre. null, caso contrário.
      */
-    private MapItem<T> findMapItem(String key) {
+    private MapItem<V> findMapItem(String key) {
         int index = this.getIndex(key);
 
         // verificar se a lista tem algo
@@ -55,7 +54,7 @@ public class CustomMap<T> {
             int i = 0;
             while (i < this.lists[index].size()) {
                 MapItem item = this.lists[index].get(i);
-                if (item != null && item.getKey() == key) {
+                if (item != null && item.getKey().equals(key)) {
                     return item;
                 }
                 i++;
@@ -77,8 +76,7 @@ public class CustomMap<T> {
      * @return true, caso vazio, false caso contrário.
      */
     public boolean isEmpty() {
-        if (this.size > 0) return true;
-        return false;
+        return (this.size == 0);
     }
 
     /**
@@ -86,29 +84,36 @@ public class CustomMap<T> {
      * @param key Chave referência.
      * @param item Valor a ser armazenado.
      */
-    public void add(String key, T item) {
+    public void add(String key, V item) {
         int index = this.getIndex(key);
-        this.lists[index].add(new MapItem(key, item));
+        this.lists[index].add(new MapItem<>(key, item));
         this.size++;
     }
 
     /**
      * Procura por um item no dicionário, a partir da key.
      * @param key Chave referência.
-     * @return T, se encontrar. null, caso contrário.
+     * @return V, se encontrar. null, caso contrário.
      */
-    public T find(String key) {
-        return this.findMapItem(key).getValue();
+    public V find(String key) {
+        try {
+            MapItem<V> result = this.findMapItem(key);
+            if (result == null) return null;
+            return result.getValue();
+        } catch (NullPointerException e) {
+            return null;
+        }
     }
 
     /**
      * Procura um item e o remove um item do dicionário.
      * @param key Chave referência.
-     * @return T, se encontrar. null, caso contrário.
+     * @return V, se encontrar. null, caso contrário.
      */
-    public T remove(String key) {
+    public V remove(String key) {
         try {
-            MapItem<T> mapItem = this.findMapItem(key);
+            MapItem<V> mapItem = this.findMapItem(key);
+            if (mapItem == null) return null;
             int index = this.getIndex(key);
             this.lists[index].remove(mapItem);
             return mapItem.getValue();
@@ -128,7 +133,7 @@ public class CustomMap<T> {
     /**
      * Retorna uma coleção com os valores armazenados no dicionário.
      */
-    private LinkedList<T> values() {
+    private LinkedList<V> values() {
         // TODO
         return null;
     }
