@@ -1,10 +1,12 @@
-public class MapItem<T> {
+package CustomMap;
+
+class MapItem<T> {
     private String key;
     private T value;
 
     MapItem() {}
 
-    MapItem(String key, T value) {
+    protected MapItem(String key, T value) {
         this.setKey(key);
         this.setValue(value);
     }
