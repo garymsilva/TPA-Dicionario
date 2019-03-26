@@ -4,6 +4,9 @@ Dicionário baseado em hash construído com Java na disciplina de Técnicas de P
 ## Modelo
 ![model](/docs/class_diagram.png)
 
+>**K**: Tipo do dado que será usado como chave. <br>
+**V**: Tipo do dado que será armazenado no dicionário.
+
 ## Construtores
 |Construtor|Descrição|
 |-|-|
@@ -27,7 +30,7 @@ class MyHashEngine implements HashEngine<String> {
 A função de hash deve retornar um herdeiro de Number. <br>
 [Leia mais: `java.lang.Number`](https://docs.oracle.com/javase/7/docs/api/java/lang/Number.html)
 
-## Interface
+## Métodos do dicionário
 
 |Método|Descrição|Retorno|
 |-|-|-|
@@ -36,6 +39,6 @@ A função de hash deve retornar um herdeiro de Number. <br>
 |`remove()`|Procura e remove um item do dicionário.|`V` ou `null`|
 |`size()`|Informa a quantidade de itens no dicionário.|`int`|
 |`isEmpty()`|Informa se o dicionário está vazio.|`boolean`|
-|`keys()`|Obtém uma coleção com as chaves armazenadas.|não implementado|
-|`values()`|Obtém uma coleção com os itens armazenados.|não implementado|
+|`keys()`|Obtém uma coleção com as chaves armazenadas.|`LinkedList<K>`|
+|`values()`|Obtém uma coleção com os itens armazenados.|`LinkedList<V>`|
 |`entries()`|Obtém uma coleção com as entradas chave->valor armazenadas.|não implementado|
