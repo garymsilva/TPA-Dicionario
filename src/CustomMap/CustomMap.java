@@ -37,7 +37,7 @@ public class CustomMap<K, V> {
      * @return número que representa qual a LinkedList daquele valor.
      */
     private int getIndex(K key) {
-        Number hash = this.hashEngine.generateHash(key.toString());
+        Number hash = this.hashEngine.generateHash(key);
         return hash.intValue() % this.lists.length;
     }
 

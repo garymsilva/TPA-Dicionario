@@ -1,14 +1,15 @@
 package CustomMap;
 
-class DefaultHashEngine implements HashEngine<String> {
+class DefaultHashEngine implements HashEngine {
 
     DefaultHashEngine() {}
 
     @Override
-    public Long generateHash(String key) {
+    public Long generateHash(Object key) {
+        String stringKey = key.toString();
         long hash = 0;
-        for (int i = 0; i < key.length(); i++) {
-            hash += (int)key.charAt(i);
+        for (int i = 0; i < stringKey.length(); i++) {
+            hash += (int)stringKey.charAt(i);
         }
         return hash;
     }

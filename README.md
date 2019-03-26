@@ -16,10 +16,12 @@ Dicionário baseado em hash construído com Java na disciplina de Técnicas de P
 
 ### Usando um HashEngine customizado
 
+Crie uma classe que implemente a interface `HashEngine`, criando um método `generatehash()` próprio, que pode receber qualquer classe no parâmetro `key` e deve retornar um `Number`.
+
 ``` Java
 import CustomMap.HashEngine
 
-class MyHashEngine implements HashEngine<String> {
+class MyHashEngine implements HashEngine {
     @Override
     public Integer generateHash(String key) {
         /* sua lógica de hashing */
@@ -27,8 +29,7 @@ class MyHashEngine implements HashEngine<String> {
 }
 
 ```
-A função de hash deve retornar um herdeiro de Number. <br>
-[Leia mais: `java.lang.Number`](https://docs.oracle.com/javase/7/docs/api/java/lang/Number.html)
+[Leia mais sobre o Number: `java.lang.Number`](https://docs.oracle.com/javase/7/docs/api/java/lang/Number.html)
 
 ## Métodos do dicionário
 
