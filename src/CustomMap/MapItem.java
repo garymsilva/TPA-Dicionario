@@ -1,17 +1,15 @@
 package CustomMap;
 
-class MapItem<V> {
-    private String key;
+class MapItem<K, V> {
+    private K key;
     private V value;
 
-    MapItem() {}
-
-    MapItem(String key, V value) {
+    MapItem(K key, V value) {
         this.setKey(key);
         this.setValue(value);
     }
 
-    String getKey() {
+    K getKey() {
         return key;
     }
 
@@ -19,7 +17,7 @@ class MapItem<V> {
         return value;
     }
 
-    void setKey(String key) {
+    void setKey(K key) {
         this.key = key;
     }
 

@@ -16,7 +16,7 @@ Dicionário baseado em hash construído com Java na disciplina de Técnicas de P
 ``` Java
 import CustomMap.HashEngine
 
-class MyHashEngine implements HashEngine {
+class MyHashEngine implements HashEngine<String> {
     @Override
     public Integer generateHash(String key) {
         /* sua lógica de hashing */

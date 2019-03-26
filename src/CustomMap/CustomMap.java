@@ -2,7 +2,7 @@ package CustomMap;
 
 import java.util.LinkedList;
 
-public class CustomMap<V> {
+public class CustomMap<K, V> {
     private LinkedList<MapItem>[] lists;
     private int size;
     private int listsLength;
@@ -36,8 +36,8 @@ public class CustomMap<V> {
      * @param key Chave referência.
      * @return número que representa qual a LinkedList daquele valor.
      */
-    private int getIndex(String key) {
-        Number hash = this.hashEngine.generateHash(key);
+    private int getIndex(K key) {
+        Number hash = this.hashEngine.generateHash(key.toString());
         return hash.intValue() % this.lists.length;
     }
 
@@ -46,7 +46,7 @@ public class CustomMap<V> {
      * @param key Chave referência.
      * @return Objeto que contém a key, caso encontre. null, caso contrário.
      */
-    private MapItem<V> findMapItem(String key) {
+    private MapItem<K, V> findMapItem(K key) {
         int index = this.getIndex(key);
 
         // verificar se a lista tem algo
@@ -84,9 +84,9 @@ public class CustomMap<V> {
      * @param key Chave referência.
      * @param item Valor a ser armazenado.
      */
-    public void add(String key, V item) {
+    public void add(K key, V item) {
         int index = this.getIndex(key);
-        this.lists[index].add(new MapItem<>(key, item));
+        this.lists[index].add(new MapItem<K, V>(key, item));
         this.size++;
     }
 
@@ -95,9 +95,9 @@ public class CustomMap<V> {
      * @param key Chave referência.
      * @return V, se encontrar. null, caso contrário.
      */
-    public V find(String key) {
+    public V find(K key) {
         try {
-            MapItem<V> result = this.findMapItem(key);
+            MapItem<K, V> result = this.findMapItem(key);
             if (result == null) return null;
             return result.getValue();
         } catch (NullPointerException e) {
@@ -110,32 +110,53 @@ public class CustomMap<V> {
      * @param key Chave referência.
      * @return V, se encontrar. null, caso contrário.
      */
-    public V remove(String key) {
+    public V remove(K key) {
+        MapItem<K, V> mapItem;
         try {
-            MapItem<V> mapItem = this.findMapItem(key);
-            if (mapItem == null) return null;
-            int index = this.getIndex(key);
-            this.lists[index].remove(mapItem);
-            return mapItem.getValue();
+            mapItem = this.findMapItem(key);
         } catch (Exception e) {
             return null;
         }
+        // se o item não foi encontrado, retorna null
+        if (mapItem == null) return null;
+
+        int index = this.getIndex(key);
+        this.lists[index].remove(mapItem);
+        return mapItem.getValue();
     }
 
     /**
      * Retorna uma coleção com as chaves armazenadas no dicionário.
      */
-    private LinkedList<String> keys() {
-        // TODO
-        return null;
+    public LinkedList<K> keys() {
+        LinkedList<MapItem> list;
+        LinkedList<K> keysList = new LinkedList<>();
+
+        for (int i = 0; i < this.listsLength; i++) {
+            list = this.lists[i];
+            for (MapItem<K, V> mapItem : list) {
+                keysList.add(mapItem.getKey());
+            }
+        }
+
+        return keysList;
     }
 
     /**
      * Retorna uma coleção com os valores armazenados no dicionário.
      */
-    private LinkedList<V> values() {
-        // TODO
-        return null;
+    public LinkedList<V> values() {
+        LinkedList<MapItem> list;
+        LinkedList<V> valuesList = new LinkedList<>();
+
+        for (int i = 0; i < this.listsLength; i++) {
+            list = this.lists[i];
+            for (MapItem<K, V> mapItem : list) {
+                valuesList.add(mapItem.getValue());
+            }
+        }
+
+        return valuesList;
     }
 
     /**
