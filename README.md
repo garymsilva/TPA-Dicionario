@@ -43,3 +43,5 @@ class MyHashEngine implements HashEngine {
 |`keys()`|Obtém uma coleção com as chaves armazenadas.|`LinkedList<K>`|
 |`values()`|Obtém uma coleção com os itens armazenados.|`LinkedList<V>`|
 |`entries()`|Obtém uma coleção com as entradas chave->valor armazenadas.|não implementado|
+|`getCollisions()`|Obtém um vetor indicando as colisões do dicionário.|`int[]`|
+|`showDiagram()`|Exibe o gráfico de colisões do dicionário.|`void`|

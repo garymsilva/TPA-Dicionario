@@ -8,16 +8,28 @@ public class CustomMap<K, V> {
     private int listsLength;
     private HashEngine hashEngine;
 
+    /**
+     * Construtor
+     */
     public CustomMap() {
-        this(10);
+        this(100);
     }
 
+    /**
+     * Construtor
+     * @param length Quantidade estimada de itens que serão armazenados no dicionário.
+     */
     public CustomMap(int length) {
         this(length, new DefaultHashEngine());
     }
 
+    /**
+     * Construtor
+     * @param length Quantidade estimada de itens que serão armazenados no dicionário.
+     * @param hashEngine Objeto que contém a função de hash personalizada do usuário.
+     */
     public CustomMap(int length, HashEngine hashEngine) {
-        this.listsLength = length;
+        this.listsLength = (int)(length/0.75);  // fator de carga = 0.75
         this.hashEngine = hashEngine;
         this.initLists();
         this.size = 0;
@@ -165,5 +177,25 @@ public class CustomMap<K, V> {
     private LinkedList<Object> entries() {
         // TODO
         return null;
+    }
+
+    /**
+     * Obtém as colisões do dicionário.
+     * @return int[] - Vetor com a quantidade de colisões em cada índice do HashMap.
+     */
+    public int[] getCollisions() {
+        int[] collisions = new int[this.listsLength];
+        for (int i = 0; i < this.listsLength; i++) {
+            collisions[i] = this.lists[i].size();
+        }
+        return collisions;
+    }
+
+    /**
+     * Exibe o gráfico de colisões.
+     * @param collisions Array de colisões.
+     */
+    public void showDiagram(int[] collisions) {
+
     }
 }
