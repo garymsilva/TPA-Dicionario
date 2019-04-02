@@ -1,6 +1,12 @@
 package CustomMap;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
+import com.github.sh0nk.matplotlib4j.*;
+import com.github.sh0nk.matplotlib4j.builder.PlotBuilder;
+import com.sun.javafx.property.adapter.PropertyDescriptor;
 
 public class CustomMap<K, V> {
     private LinkedList<MapItem>[] lists;
@@ -142,7 +148,7 @@ public class CustomMap<K, V> {
      */
     public LinkedList<K> keys() {
         LinkedList<MapItem> list;
-        LinkedList<K> keysList = new LinkedList<>();
+        LinkedList<K> keysList = new LinkedList<K>();
 
         for (int i = 0; i < this.listsLength; i++) {
             list = this.lists[i];
@@ -159,7 +165,7 @@ public class CustomMap<K, V> {
      */
     public LinkedList<V> values() {
         LinkedList<MapItem> list;
-        LinkedList<V> valuesList = new LinkedList<>();
+        LinkedList<V> valuesList = new LinkedList<V>();
 
         for (int i = 0; i < this.listsLength; i++) {
             list = this.lists[i];
@@ -195,7 +201,15 @@ public class CustomMap<K, V> {
      * Exibe o gráfico de colisões.
      * @param collisions Array de colisões.
      */
-    public void showDiagram(int[] collisions) {
-
+    public void showDiagram(Integer[] collisions) {
+        Plot plot = Plot.create();
+        plot.plot().add(Arrays.asList(collisions));
+        try {
+            plot.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (PythonExecutionException e) {
+            e.printStackTrace();
+        }
     }
 }
