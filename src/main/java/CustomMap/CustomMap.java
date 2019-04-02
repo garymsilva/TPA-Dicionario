@@ -104,7 +104,7 @@ public class CustomMap<K, V> {
      */
     public void add(K key, V item) {
         int index = this.getIndex(key);
-        this.lists[index].add(new MapItem<K, V>(key, item));
+        this.lists[index].add(new MapItem<>(key, item));
         this.size++;
     }
 
@@ -148,7 +148,7 @@ public class CustomMap<K, V> {
      */
     public LinkedList<K> keys() {
         LinkedList<MapItem> list;
-        LinkedList<K> keysList = new LinkedList<K>();
+        LinkedList<K> keysList = new LinkedList<>();
 
         for (int i = 0; i < this.listsLength; i++) {
             list = this.lists[i];
@@ -187,10 +187,10 @@ public class CustomMap<K, V> {
 
     /**
      * Obtém as colisões do dicionário.
-     * @return int[] - Vetor com a quantidade de colisões em cada índice do HashMap.
+     * @return Integer[] - Vetor com a quantidade de colisões em cada índice do HashMap.
      */
-    public int[] getCollisions() {
-        int[] collisions = new int[this.listsLength];
+    public Integer[] getCollisions() {
+        Integer[] collisions = new Integer[this.listsLength];
         for (int i = 0; i < this.listsLength; i++) {
             collisions[i] = this.lists[i].size();
         }
@@ -199,16 +199,16 @@ public class CustomMap<K, V> {
 
     /**
      * Exibe o gráfico de colisões.
-     * @param collisions Array de colisões.
      */
-    public void showDiagram(Integer[] collisions) {
+    public void showCollisionsDiagram() {
         Plot plot = Plot.create();
-        plot.plot().add(Arrays.asList(collisions));
+        plot.plot().add(Arrays.asList(this.getCollisions()));
+        plot.xlabel("Índice da lista");
+        plot.ylabel("Quantidade de entradas");
+        plot.title("Colisões");
         try {
             plot.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (PythonExecutionException e) {
+        } catch (PythonExecutionException | IOException e) {
             e.printStackTrace();
         }
     }
