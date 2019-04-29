@@ -165,7 +165,7 @@ public class CustomMap<K, V> {
      */
     public LinkedList<V> values() {
         LinkedList<MapItem> list;
-        LinkedList<V> valuesList = new LinkedList<V>();
+        LinkedList<V> valuesList = new LinkedList<>();
 
         for (int i = 0; i < this.listsLength; i++) {
             list = this.lists[i];

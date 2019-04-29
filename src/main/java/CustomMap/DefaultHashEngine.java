@@ -1,6 +1,6 @@
 package CustomMap;
 
-class DefaultHashEngine implements HashEngine {
+class DefaultHashEngine extends HashEngine {
 
     DefaultHashEngine() {}
 

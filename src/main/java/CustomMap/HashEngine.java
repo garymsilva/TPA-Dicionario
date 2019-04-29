@@ -1,5 +1,5 @@
 package CustomMap;
 
-public interface HashEngine {
-    Number generateHash(Object key);
+public abstract class HashEngine {
+    public abstract Number generateHash(Object key);
 }
