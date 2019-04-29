@@ -1,12 +1,9 @@
 package CustomMap;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import com.github.sh0nk.matplotlib4j.*;
-import com.github.sh0nk.matplotlib4j.builder.PlotBuilder;
-import com.sun.javafx.property.adapter.PropertyDescriptor;
 
 public class CustomMap<K, V> {
     private LinkedList<MapItem>[] lists;
@@ -23,30 +20,31 @@ public class CustomMap<K, V> {
 
     /**
      * Construtor
-     * @param length Quantidade estimada de itens que serão armazenados no dicionário.
+     * @param mapLength Quantidade estimada de itens que serão armazenados no dicionário.
      */
-    public CustomMap(int length) {
-        this(length, new DefaultHashEngine());
+    public CustomMap(int mapLength) {
+        this(mapLength, new DefaultHashEngine());
     }
 
     /**
      * Construtor
-     * @param length Quantidade estimada de itens que serão armazenados no dicionário.
+     * @param mapLength Quantidade estimada de itens que serão armazenados no dicionário.
      * @param hashEngine Objeto que contém a função de hash personalizada do usuário.
      */
-    public CustomMap(int length, HashEngine hashEngine) {
-        this.listsLength = (int)(length/0.75);  // fator de carga = 0.75
+    public CustomMap(int mapLength, HashEngine hashEngine) {
         this.hashEngine = hashEngine;
-        this.initLists();
+        this.initLists(mapLength);
         this.size = 0;
     }
 
     /**
      * Inicializa o TAD do dicionário.
+     * @param declaredSize Quantidade estimada de itens que serão armazenados no dicionário.
      */
-    private void initLists() {
+    private void initLists(int declaredSize) {
+        this.listsLength = (int)(declaredSize/0.75);  // fator de carga = 0.75
         this.lists = new LinkedList[this.listsLength];
-        for (int i = 0; i < this.listsLength; i++) this.lists[i] = new LinkedList<MapItem>();
+        for (int index = 0; index < this.listsLength; index++) this.lists[index] = new LinkedList<MapItem>();
     }
 
     /**
@@ -82,19 +80,17 @@ public class CustomMap<K, V> {
     }
 
     /**
-     * Informa a quantidade de entradas no dicionário.
-     * @return número de entradas.
+     * Recalcula a quantidade ideal de listas encadeadas e reconstrói o dicionário.
      */
-    public int size() {
-        return this.size;
-    }
+    private void resize() {
+        LinkedList<MapItem>[] listsBackup = this.lists;
+        this.initLists(this.size);
 
-    /**
-     * Diz se o dicionário está vazio.
-     * @return true, caso vazio, false caso contrário.
-     */
-    public boolean isEmpty() {
-        return (this.size == 0);
+        for (LinkedList<MapItem> list: listsBackup) {
+            for (MapItem<K,V> item : list) {
+                this.insert(item.getKey(), item.getValue());
+            }
+        }
     }
 
     /**
@@ -102,10 +98,15 @@ public class CustomMap<K, V> {
      * @param key Chave referência.
      * @param item Valor a ser armazenado.
      */
-    public void add(K key, V item) {
+    public void insert(K key, V item) {
         int index = this.getIndex(key);
         this.lists[index].add(new MapItem<>(key, item));
         this.size++;
+
+        // quando houver mais elementos que listas encadeadas, ocorrerá o redimensionamento
+        if (this.size > this.listsLength) {
+            this.resize();
+        }
     }
 
     /**
@@ -144,6 +145,30 @@ public class CustomMap<K, V> {
     }
 
     /**
+     * Diz se o dicionário está vazio.
+     * @return true, caso vazio, false caso contrário.
+     */
+    public boolean isEmpty() {
+        return (this.size == 0);
+    }
+
+    /**
+     * Informa a quantidade de entradas no dicionário.
+     * @return número de entradas.
+     */
+    public int size() {
+        return this.size;
+    }
+
+    /**
+     * Retorna se a chave foi encontrada no dicionário após a execução do find.
+     * @return true se foi encontrada, false caso contrário.
+     */
+    public boolean NO_SUCH_KEY() {
+        return false;
+    }
+
+    /**
      * Retorna uma coleção com as chaves armazenadas no dicionário.
      */
     public LinkedList<K> keys() {
@@ -175,6 +200,25 @@ public class CustomMap<K, V> {
         }
 
         return valuesList;
+    }
+
+    /**
+     * Instancia um novo dicionário clone do original.
+     * @return CustomMap
+     */
+    public CustomMap<K, V> clone() {
+        // TODO clonar dicionário e retornar
+        return new CustomMap<K, V>(this.declaredSize);
+    }
+
+    /**
+     * Compara este dicionário com a fonte fornecida.
+     * @param source Dicionário a ser comparado.
+     * @return true, se os dois dicionários forem iguais, false, caso contrário.
+     */
+    public boolean equals(CustomMap source) {
+        // TODO
+        return false;
     }
 
     /**
