@@ -8,8 +8,11 @@ import com.github.sh0nk.matplotlib4j.*;
 public class CustomMap<K, V> {
     private LinkedList<MapItem>[] lists;
     private int size;
+    private int declaredSize;
     private int listsLength;
     private HashEngine hashEngine;
+
+    private boolean foundMapItem = false;
 
     /**
      * Construtor
@@ -42,6 +45,7 @@ public class CustomMap<K, V> {
      * @param declaredSize Quantidade estimada de itens que serão armazenados no dicionário.
      */
     private void initLists(int declaredSize) {
+        this.declaredSize = declaredSize;
         this.listsLength = (int)(declaredSize/0.75);  // fator de carga = 0.75
         this.lists = new LinkedList[this.listsLength];
         for (int index = 0; index < this.listsLength; index++) this.lists[index] = new LinkedList<MapItem>();
@@ -71,11 +75,13 @@ public class CustomMap<K, V> {
             while (i < this.lists[index].size()) {
                 MapItem item = this.lists[index].get(i);
                 if (item != null && item.getKey().equals(key)) {
+                    this.foundMapItem = true;
                     return item;
                 }
                 i++;
             }
         }
+        this.foundMapItem = false;
         return null;
     }
 
@@ -87,7 +93,7 @@ public class CustomMap<K, V> {
         this.initLists(this.size);
 
         for (LinkedList<MapItem> list: listsBackup) {
-            for (MapItem<K,V> item : list) {
+            for (MapItem<K, V> item : list) {
                 this.insert(item.getKey(), item.getValue());
             }
         }
@@ -96,11 +102,12 @@ public class CustomMap<K, V> {
     /**
      * Adiciona um item ao dicionário.
      * @param key Chave referência.
-     * @param item Valor a ser armazenado.
+     * @param value Valor a ser armazenado.
      */
-    public void insert(K key, V item) {
+    public void insert(K key, V value) {
         int index = this.getIndex(key);
-        this.lists[index].add(new MapItem<>(key, item));
+        MapItem<K, V> item = new MapItem<>(key, value);
+        this.lists[index].add(item);
         this.size++;
 
         // quando houver mais elementos que listas encadeadas, ocorrerá o redimensionamento
@@ -115,27 +122,20 @@ public class CustomMap<K, V> {
      * @return V, se encontrar. null, caso contrário.
      */
     public V find(K key) {
-        try {
-            MapItem<K, V> result = this.findMapItem(key);
-            if (result == null) return null;
-            return result.getValue();
-        } catch (NullPointerException e) {
-            return null;
-        }
+        MapItem<K, V> result = this.findMapItem(key);
+        if (result == null) return null;
+
+        return result.getValue();
     }
 
     /**
-     * Procura um item e o remove um item do dicionário.
+     * Procura um item e o remove do dicionário.
      * @param key Chave referência.
      * @return V, se encontrar. null, caso contrário.
      */
     public V remove(K key) {
-        MapItem<K, V> mapItem;
-        try {
-            mapItem = this.findMapItem(key);
-        } catch (Exception e) {
-            return null;
-        }
+        MapItem<K, V> mapItem = this.findMapItem(key);
+
         // se o item não foi encontrado, retorna null
         if (mapItem == null) return null;
 
@@ -165,7 +165,7 @@ public class CustomMap<K, V> {
      * @return true se foi encontrada, false caso contrário.
      */
     public boolean NO_SUCH_KEY() {
-        return false;
+        return !this.foundMapItem;
     }
 
     /**
@@ -207,8 +207,15 @@ public class CustomMap<K, V> {
      * @return CustomMap
      */
     public CustomMap<K, V> clone() {
-        // TODO clonar dicionário e retornar
-        return new CustomMap<K, V>(this.declaredSize);
+        CustomMap<K, V> clone = new CustomMap<K, V>(this.declaredSize, this.hashEngine);
+        MapItem<K, V> item;
+
+        for (K key : this.keys()) {
+            item = this.findMapItem(key);
+            clone.insert(item.getKey(), item.getValue());
+        }
+
+        return clone;
     }
 
     /**
@@ -217,15 +224,20 @@ public class CustomMap<K, V> {
      * @return true, se os dois dicionários forem iguais, false, caso contrário.
      */
     public boolean equals(CustomMap source) {
-        // TODO
-        return false;
+        if (this.size != source.size()) return false;   // se não tiver o mesmo tamanho -> dicionários diferentes
+        for (K key : this.keys()) {                     // procura cada chave deste dicionário, no outro
+            Object value = source.find(key);
+            if (source.NO_SUCH_KEY()) return false;     // se não encontrar algo -> dicionários diferentes
+            if (value != this.find(key)) return false;  // se encontrar, compara os valores obtidos
+        }
+        return true;
     }
 
     /**
      * Retorna uma coleção com as entradas {chave, valor} armazenadas no dicionário.
      */
     private LinkedList<Object> entries() {
-        // TODO
+        // TODO entries
         return null;
     }
 
